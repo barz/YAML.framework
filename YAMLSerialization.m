@@ -82,7 +82,7 @@ __YAMLSerializationObjectWithYAMLDocument (yaml_document_t *document, YAMLReadOp
     // Hsoi 2014-03-05 - because of the analyzer suppression below (to deal with the possible leak warning)
     // that wraps up the use of 'stringClass' so the analyzer doesn't see it actually being used. Thus here
     // it issues a warning about "value stored in 'stringClass' is never read". So more suppression.
-#ifndef __clang_analyzer__
+//#ifndef __clang_analyzer__
     // Mutability options
     Class arrayClass = [NSMutableArray class]; // TODO: FIXME:
     Class dictionaryClass = [NSMutableDictionary class]; // TODO: FIXME:
@@ -94,7 +94,7 @@ __YAMLSerializationObjectWithYAMLDocument (yaml_document_t *document, YAMLReadOp
             stringClass = [NSMutableString class];
         }
     }
-#endif
+//#endif
 
     yaml_node_t *node = NULL;
     yaml_node_item_t *item = NULL;
@@ -116,13 +116,13 @@ __YAMLSerializationObjectWithYAMLDocument (yaml_document_t *document, YAMLReadOp
                 // is because above when the string is alloc/init'd, there's no (auto)release of it. Well, it seems the way
                 // this code is written, everything is retained, then further down before returning there's a bunch of
                 // explicit releasing. So... it's not a leak, so we'll suppress the analyzer.
-#ifndef __clang_analyzer__
+//#ifndef __clang_analyzer__
                 id value = [[stringClass alloc] initWithUTF8String: (const char *)node->data.scalar.value];
                 if (!(opt & kYAMLReadOptionStringScalars)) {
                     value = ParseNull(value) ?: ParseBoolean(value) ?: ParseNumber(value) ?: ParseDate(value) ?: value;
                 }
                 objects[i] = value;
-#endif
+//#endif
                 if (!root) root = objects[i];
                 break;
             }
